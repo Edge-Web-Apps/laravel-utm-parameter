@@ -7,7 +7,6 @@
 ![GitHub](https://img.shields.io/github/license/toni-suarez/laravel-utm-parameter)
 [![Statamic Addon](https://img.shields.io/badge/https%3A%2F%2Fstatamic.com%2Faddons%2Ftoni-suarez%2Futm-parameter?style=flat-square&logo=statamic&logoColor=rgb(255%2C%2038%2C%20158)&label=Statamic&link=https%3A%2F%2Fstatamic.com%2Faddons%2Ftoni-suarez%2Futm-parameter)](https://statamic.com/addons/toni-suarez/utm-parameter)
 
-
 A lightweight way to handle UTM parameters session-based in your Laravel Application.
 
 ```blade
@@ -73,6 +72,73 @@ To apply UTM-Parameters to specific routes, use the following middleware: `utm-p
 Route::middleware('utm-parameters')
   ->get('landing-page/{slug}', 'LandingPageController@show');
 ```
+
+## Config
+
+The configuration file allows you to control the behavior of the UTM parameters handling.
+
+```php
+<?php
+return [
+  'override_utm_parameters' => false
+];
+```
+
+**override_utm_parameters**
+
+If set to `true`, the UTM parameters will be overridden in the session if new ones are retrieved. For example, if a user first visits with `utm_source=newsletter` and then later with `utm_source=podcast`, the `utm_source` will be updated to podcast. If set to `false`, the initial `utm_source` (newsletter) will be retained throughout the session.
+
+
+## Extending the Middleware
+
+You can extend the middleware to customize the behavior of accepting UTM parameters. For example, you can override the `shouldAcceptUtmParameter` method.
+
+First, create a new middleware using Artisan:
+
+```bash
+php artisan make:middleware CustomMiddleware
+```
+
+Then, update the new middleware to extend UtmParameters and override the `shouldAcceptUtmParameter` method:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Request;
+use Suarez\UtmParameter\Middleware\UtmParameters;
+
+class CustomMiddleware extends UtmParameters
+{
+    /**
+     * Determines whether the given request/response pair should accept UTM-Parameters.
+     *
+     * @param \Illuminate\Http\Request  $request
+     *
+     * @return bool
+     */
+    protected function shouldAcceptUtmParameter(Request $request)
+    {
+        return $request->isMethod('GET') || $request->isMethod('POST');
+    }
+}
+```
+
+Finally, update your `bootstrap/app.php` to use the CustomMiddleware:
+
+```php
+# bootstrap/app.php
+use App\Http\Middleware\CustomMiddleware;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: [
+        CustomMiddleware::class,
+        // other middleware...
+    ]);
+})
+```
+
 
 ## Usage
 
@@ -141,7 +207,6 @@ Simply use:
    session()->flash('Did you know, we have a newsletter?');
  }
 ```
-
 
 ## Resources
 Explore additional use cases and resources on the [wiki pages](https://github.com/toni-suarez/laravel-utm-parameter/wiki)
