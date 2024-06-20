@@ -27,9 +27,14 @@ Open your terminal and navigate to your Laravel project directory. Then, use Com
 $ composer require suarez/laravel-utm-parameter
 ```
 
+Optionally, you can publish the config file of this package with this command:
+```bash
+php artisan vendor:publish --tag="utm-parameter"
+```
+
 ### Middleware Configuration
 
-Once the package is installed, you need to add the UtmParameters middleware to your Laravel application. Open the `bootstrap/app.php` file and append the `UtmParameters::class` inside the web-group.
+Once the package is installed, you need to add the UtmParameters middleware to your Laravel application. Open the `bootstrap/app.php` file and append the `UtmParameters::class` inside the web-group. Also, take a look at how to set an [alias for the middleware](https://github.com/toni-suarez/laravel-utm-parameter/wiki/Installation-Guide#step-3-alias-configuration-optional).
 
 ```php
 # Laravel 11
@@ -44,101 +49,25 @@ return Application::configure(basePath: dirname(__DIR__))
   ...
 ```
 
-### Middleware Alias (Optional)
+## Configuration
 
-To enable UTM-Parameters only for certain requests or routes in your application, you can add an alias for the UtmParameters middleware. Open the bootstrap/app.php file and append the `UtmParameters::class` inside the web-group.
-
-
-```php
-# Laravel 11
-use Suarez\UtmParameter\Middleware\UtmParameters;
-
-->withMiddleware(function (Middleware $middleware) {
-    $middleware
-        ->alias([
-          /* ... keep the existing mappings here */
-          'utm-parameters' => UtmParameters::class,
-          ])
-        ->web(append: [
-          /* ... keep the existing mappings here */
-          UtmParameters::class
-        ]);
-})
-```
-
-To apply UTM-Parameters to specific routes, use the following middleware: `utm-parameters`
-
-```php
-Route::middleware('utm-parameters')
-  ->get('landing-page/{slug}', 'LandingPageController@show');
-```
-
-## Config
-
-The configuration file allows you to control the behavior of the UTM parameters handling.
+The configuration file `config/utm-parameter.php` allows you to control the behavior of the UTM parameters handling.
 
 ```php
 <?php
+
 return [
-  'override_utm_parameters' => false
+  /*
+   * Control Overwriting UTM Parameters (default: false)
+   *
+   * This setting determines how UTM parameters are handled within a user's session.
+   *
+   * - Enabled (true): New UTM parameters will overwrite existing ones during the session.
+   * - Disabled (false): The initial UTM parameters will persist throughout the session.
+   */
+  'override_utm_parameters' => false,
 ];
 ```
-
-**override_utm_parameters**
-
-If set to `true`, the UTM parameters will be overridden in the session if new ones are retrieved. For example, if a user first visits with `utm_source=newsletter` and then later with `utm_source=podcast`, the `utm_source` will be updated to podcast. If set to `false`, the initial `utm_source` (newsletter) will be retained throughout the session.
-
-
-## Extending the Middleware
-
-You can extend the middleware to customize the behavior of accepting UTM parameters. For example, you can override the `shouldAcceptUtmParameter` method.
-
-First, create a new middleware using Artisan:
-
-```bash
-php artisan make:middleware CustomMiddleware
-```
-
-Then, update the new middleware to extend UtmParameters and override the `shouldAcceptUtmParameter` method:
-
-```php
-<?php
-
-namespace App\Http\Middleware;
-
-use Illuminate\Http\Request;
-use Suarez\UtmParameter\Middleware\UtmParameters;
-
-class CustomMiddleware extends UtmParameters
-{
-    /**
-     * Determines whether the given request/response pair should accept UTM-Parameters.
-     *
-     * @param \Illuminate\Http\Request  $request
-     *
-     * @return bool
-     */
-    protected function shouldAcceptUtmParameter(Request $request)
-    {
-        return $request->isMethod('GET') || $request->isMethod('POST');
-    }
-}
-```
-
-Finally, update your `bootstrap/app.php` to use the CustomMiddleware:
-
-```php
-# bootstrap/app.php
-use App\Http\Middleware\CustomMiddleware;
-
-->withMiddleware(function (Middleware $middleware) {
-    $middleware->web(append: [
-        CustomMiddleware::class,
-        // other middleware...
-    ]);
-})
-```
-
 
 ## Usage
 
@@ -207,6 +136,57 @@ Simply use:
    session()->flash('Did you know, we have a newsletter?');
  }
 ```
+
+## Extending the Middleware
+
+You can extend the middleware to customize the behavior of accepting UTM parameters. For example, you can override the `shouldAcceptUtmParameter` method.
+
+First, create a new middleware using Artisan:
+
+```bash
+php artisan make:middleware CustomMiddleware
+```
+
+Then, update the new middleware to extend UtmParameters and override the `shouldAcceptUtmParameter` method:
+
+```php
+<?php
+
+namespace App\Http\Middleware;
+
+use Illuminate\Http\Request;
+use Suarez\UtmParameter\Middleware\UtmParameters;
+
+class CustomMiddleware extends UtmParameters
+{
+    /**
+     * Determines whether the given request/response pair should accept UTM-Parameters.
+     *
+     * @param \Illuminate\Http\Request  $request
+     *
+     * @return bool
+     */
+    protected function shouldAcceptUtmParameter(Request $request)
+    {
+        return $request->isMethod('GET') || $request->isMethod('POST');
+    }
+}
+```
+
+Finally, update your `bootstrap/app.php` to use the CustomMiddleware:
+
+```php
+# bootstrap/app.php
+use App\Http\Middleware\CustomMiddleware;
+
+->withMiddleware(function (Middleware $middleware) {
+    $middleware->web(append: [
+        CustomMiddleware::class,
+        // other middleware...
+    ]);
+})
+```
+
 
 ## Resources
 Explore additional use cases and resources on the [wiki pages](https://github.com/toni-suarez/laravel-utm-parameter/wiki)

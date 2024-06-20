@@ -26,7 +26,7 @@ class UtmParameterServiceProvider extends ServiceProvider
      */
     public function boot()
     {
-        $this->publishes([__DIR__.'/../config/utm-parameter.php' => config_path('utm-parameter.php')]);
+        $this->publishes([__DIR__.'/../config/utm-parameter.php' => config_path('utm-parameter.php')], 'utm-parameter');
 
         Blade::if('hasUtm', function (string $key, string|null $value = null) {
             return has_utm($key, $value);
