@@ -11,10 +11,19 @@ class UtmParameter
      *
      * @var array
      */
-    public $parameters;
+    public array|null $parameters;
+
+    /**
+     * Utm Parameter Session Key.
+     *
+     * @var string
+     */
+    public string $sessionKey;
+
 
     public function __construct(array $parameters = [])
     {
+        $this->sessionKey = config('utm-parameter.session_key');
         $this->parameters = $parameters;
     }
 
@@ -40,16 +49,16 @@ class UtmParameter
     public function useRequestOrSession(Request $request)
     {
         $currentRequestParameter = self::getParameter($request);
-        $sessionParameter = session('utm');
+        $sessionParameter = session($this->sessionKey);
 
         if (!empty($currentRequestParameter) && empty($sessionParameter)) {
-            session(['utm' => $currentRequestParameter]);
+            session([$this->sessionKey => $currentRequestParameter]);
             return $currentRequestParameter;
         }
 
         if (!empty($currentRequestParameter) && !empty($sessionParameter) && config('utm-parameter.override_utm_parameters')) {
             $mergedParameters = array_merge($sessionParameter, $currentRequestParameter);
-            session(['utm' => $mergedParameters]);
+            session([$this->sessionKey => $mergedParameters]);
             return $mergedParameters;
         }
 
@@ -73,7 +82,7 @@ class UtmParameter
      *
      * @return string|null
      */
-    public static function get($key)
+    public static function get(string $key)
     {
         $parameters = self::all();
         $key = self::ensureUtmPrefix($key);
@@ -93,7 +102,7 @@ class UtmParameter
      *
      * @return bool
      */
-    public static function has($key, $value = null)
+    public static function has(string $key, $value = null)
     {
         $parameters = self::all();
         $key = self::ensureUtmPrefix($key);
@@ -116,7 +125,7 @@ class UtmParameter
      * @param string $value
      * @return bool
      */
-    public static function contains($key, $value)
+    public static function contains(string $key, string $value)
     {
         $parameters = self::all();
         $key = self::ensureUtmPrefix($key);
@@ -136,7 +145,7 @@ class UtmParameter
     public static function clear()
     {
         app(UtmParameter::class)->parameters = null;
-        session()->forget('utm');
+        session()->forget(app(UtmParameter::class)->sessionKey);
         return true;
     }
 
