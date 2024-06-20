@@ -43,6 +43,5 @@ class UtmParameterServiceProvider extends ServiceProvider
         Blade::if('containsNotUtm', function (string $key, string|null $value = null) {
             return contains_not_utm($key, $value);
         });
-
     }
 }
