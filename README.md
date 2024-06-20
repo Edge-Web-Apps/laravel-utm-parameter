@@ -34,7 +34,7 @@ php artisan vendor:publish --tag="utm-parameter"
 
 ### Middleware Configuration
 
-Once the package is installed, you need to add the UtmParameters middleware to your Laravel application. Open the `bootstrap/app.php` file and append the `UtmParameters::class` inside the web-group. Also, take a look at how to set an [alias for the middleware](https://github.com/toni-suarez/laravel-utm-parameter/wiki/Installation-Guide#step-3-alias-configuration-optional).
+Once the package is installed, you need to add the UtmParameters middleware to your Laravel application. Open the `bootstrap/app.php` file and append the `UtmParameters::class` inside the web-group.
 
 ```php
 # Laravel 11
@@ -48,6 +48,8 @@ return Application::configure(basePath: dirname(__DIR__))
   })
   ...
 ```
+
+Also, take a look at how to set an [alias for the middleware](https://github.com/toni-suarez/laravel-utm-parameter/wiki/Installation-Guide#step-3-alias-configuration-optional).
 
 ## Configuration
 
@@ -137,6 +139,34 @@ Simply use:
  }
 ```
 
+### contains_utm()
+
+Sometimes you want to show or do something, if user might have some or specific utm-parameters.
+
+Simply use:
+- `contains_utm('source|medium|campaign|term|content', 'value')`
+- `contains_not_utm('source|medium|campaign|term|content', 'value')`
+
+```blade
+@containsUtm('source', 'weekly')
+  <div>Some Weekly related stuff</div>
+@endhasUtm
+
+@containsNotUtm('sales')
+  <p>Some not Sales stuff</p>
+@endhasNotUtm
+```
+
+```php
+ if (contains_utm('campaign', 'weekly')) {
+   redirect('to/special/page');
+ }
+
+ if (contains_not_utm('campaign', 'sale')) {
+   session()->flash('Did you know, we have a newsletter?');
+ }
+```
+
 ## Extending the Middleware
 
 You can extend the middleware to customize the behavior of accepting UTM parameters. For example, you can override the `shouldAcceptUtmParameter` method.
@@ -186,7 +216,6 @@ use App\Http\Middleware\CustomMiddleware;
     ]);
 })
 ```
-
 
 ## Resources
 Explore additional use cases and resources on the [wiki pages](https://github.com/toni-suarez/laravel-utm-parameter/wiki)

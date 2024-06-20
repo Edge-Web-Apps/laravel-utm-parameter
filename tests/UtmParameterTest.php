@@ -181,6 +181,20 @@ class UtmParameterTest extends TestCase
         $this->assertFalse($medium);
     }
 
+    public function test_it_should_determine_if_a_utm_parameter_contains_a_value()
+    {
+        $isGoogle = contains_utm('source', 'goog');
+        $this->assertIsBool($isGoogle);
+        $this->assertTrue($isGoogle);
+    }
+
+    public function test_it_should_determine_if_a_utm_parameter_not_contains_a_value()
+    {
+        $isRandomSource = has_not_utm('source', 'random');
+        $this->assertIsBool($isRandomSource);
+        $this->assertTrue($isRandomSource);
+    }
+
     public function test_it_should_clear_and_remove_the_utm_parameter_again()
     {
         $source = UtmParameter::get('source');
