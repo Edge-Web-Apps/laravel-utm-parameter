@@ -141,7 +141,7 @@ Simply use:
 
 ### contains_utm()
 
-Sometimes you want to show or do something, if user might have some or specific utm-parameters.
+You can conditionally show or perform actions based on the presence or absence of a portion of an UTM parameters using contains.
 
 Simply use:
 - `contains_utm('source|medium|campaign|term|content', 'value')`
