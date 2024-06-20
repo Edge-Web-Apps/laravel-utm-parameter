@@ -30,7 +30,7 @@ class UtmParameters
      *
      * @param \Illuminate\Http\Request  $request
      *
-     * @return bool
+     * @return \Illuminate\Http\Request
      */
     protected function shouldAcceptUtmParameter(Request $request)
     {
