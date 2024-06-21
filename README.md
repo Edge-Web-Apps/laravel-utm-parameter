@@ -17,12 +17,6 @@ A lightweight way to handle UTM parameters session-based in your Laravel Applica
 
 ---
 
-## Table of Content
-
-- [Installation](#installation)
-- [Usage](#usage)
-- [License](#license)
-
 ## Installation
 
 Follow these steps to install the Laravel UTM-Parameters package.
