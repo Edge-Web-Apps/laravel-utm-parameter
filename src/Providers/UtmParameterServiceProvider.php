@@ -4,6 +4,7 @@ namespace Suarez\UtmParameter\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Suarez\UtmParameter\UtmParameter;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class UtmParameterServiceProvider extends ServiceProvider
