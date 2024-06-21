@@ -3,6 +3,13 @@
     "description": "A little helper to store and handle utm-parameter",
     "homepage": "https://github.com/toni-suarez/laravel-utm-parameter",
     "license": "MIT",
+    "keywords": [
+        "php",
+        "laravel",
+        "utm-parameter",
+        "social-media",
+        "utm"
+    ],
     "authors": [
         {
             "name": "Toni Suarez",
@@ -44,7 +51,10 @@
         "laravel": {
             "providers": [
                 "Suarez\\UtmParameter\\Providers\\UtmParameterServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "UtmParameter": "Suarez\\UtmParameter\\Facades\\UtmParameter"
+            }
         }
     },
     "minimum-stability": "stable",
