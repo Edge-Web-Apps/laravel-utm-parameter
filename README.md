@@ -146,7 +146,7 @@ return [
 
 ## Usage
 
-### All UTM parameters
+### get_all_utm()
 
 To get an array of all UTM parameters, use this helper:  `get_all_utm()`.
 
@@ -154,7 +154,7 @@ To get an array of all UTM parameters, use this helper:  `get_all_utm()`.
 $parameter = get_all_utm();
 ```
 
-###  Get UTM parameter
+###  get_utm()
 
 If you need to retrieve certain UTM parameters, use `get_utm('source|medium|campaign|term|content')`.
 
@@ -184,7 +184,7 @@ Route::get('/', function () {
 });
 ```
 
-### Has UTM parameter
+### has_utm()
 
 Sometimes you want to show or do something, if user might have some or specific utm-parameters.
 
