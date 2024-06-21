@@ -72,7 +72,7 @@ class UtmParameter
      */
     public function all()
     {
-        return $this->parameters ?? [];
+        return session($this->sessionKey) ?? [];
     }
 
     /**
