@@ -154,7 +154,7 @@ class UtmParameter
      *
      * @return array
      */
-    protected static function getParameter(Request $request)
+    protected function getParameter(Request $request)
     {
         $allowedKeys = config('utm-parameter.allowed_utm_parameters', [
             'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'
