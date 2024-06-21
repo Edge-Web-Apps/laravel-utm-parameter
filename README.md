@@ -34,7 +34,7 @@ php artisan vendor:publish --tag="utm-parameter"
 
 ### Middleware Configuration
 
-Once the package is installed, you need to add the UtmParameters middleware to your Laravel application. Open the `bootstrap/app.php` file and append the `UtmParameters::class` inside the web-group.
+Once the package is installed, you can add the UtmParameters middleware to your Laravel application. Open the `bootstrap/app.php` file and append the `UtmParameters::class` inside the web-group.
 
 ```php
 # Laravel 11
@@ -50,6 +50,29 @@ return Application::configure(basePath: dirname(__DIR__))
 ```
 
 Also, take a look at how to set an [alias for the middleware](https://github.com/toni-suarez/laravel-utm-parameter/wiki/Installation-Guide#step-3-alias-configuration-optional).
+
+### Use as Facade
+
+If you prefer not to use it as middleware, you can utilize the UtmParameter Facade directly in your controllers or other parts of your application. Once the `boot($request)`-method is called, you have access to it at any place. For example:
+
+```php
+use Suarez\UtmParameter\Facades\UtmParameter;
+
+// Inside a controller method
+class IndexController {
+  public function index(Request $request)
+  {
+      UtmParameter::boot($request);
+  }
+}
+
+class SomeDifferentController {
+  public function index(Request $request)
+  {
+      $source = UtmParameter::get('source');
+  }
+}
+```
 
 ## Configuration
 
