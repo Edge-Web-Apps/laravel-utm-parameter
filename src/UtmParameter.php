@@ -144,8 +144,8 @@ class UtmParameter
      */
     public static function clear()
     {
-        app(UtmParameter::class)->parameters = null;
         session()->forget(app(UtmParameter::class)->sessionKey);
+        app(UtmParameter::class)->parameters = null;
         return true;
     }
 
@@ -156,9 +156,16 @@ class UtmParameter
      */
     protected static function getParameter(Request $request)
     {
+        $allowedKeys = config('utm-parameter.allowed_utm_parameters', [
+            'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'
+        ]);
+
         return collect($request->all())
             ->filter(fn ($value, $key) => substr($key, 0, 4) === 'utm_')
-            ->map(fn ($value) => htmlspecialchars($value, ENT_QUOTES, 'UTF-8'))
+            ->filter(fn ($value, $key) => in_array($key, $allowedKeys))
+            ->mapWithKeys(fn ($value, $key) => [
+                htmlspecialchars($key, ENT_QUOTES, 'UTF-8') => htmlspecialchars($value, ENT_QUOTES, 'UTF-8')
+            ])
             ->toArray();
     }
 
