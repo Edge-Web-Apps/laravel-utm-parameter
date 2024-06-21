@@ -4,7 +4,7 @@ namespace Suarez\UtmParameter\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Suarez\UtmParameter\UtmParameter;
+use Suarez\UtmParameter\Facades\UtmParameter;
 
 class UtmParameters
 {
@@ -14,12 +14,12 @@ class UtmParameters
      * @param \Illuminate\Http\Request $request
      * @param \Closure                 $next
      *
-     * @return mixed
+     * @return \Closure
      */
     public function handle(Request $request, Closure $next)
     {
         if ($this->shouldAcceptUtmParameter($request)) {
-            app(UtmParameter::class)->boot(session('utm'));
+            UtmParameter::boot($request);
         }
 
         return $next($request);
@@ -29,9 +29,8 @@ class UtmParameters
      * Determines whether the given request/response pair should accept UTM-Parameters.
      *
      * @param \Illuminate\Http\Request  $request
-     * @param \Illuminate\Http\Response $response
      *
-     * @return \Illuminate\Http\Request
+     * @return bool
      */
     protected function shouldAcceptUtmParameter(Request $request)
     {
