@@ -4,7 +4,7 @@ namespace Suarez\UtmParameter\Tests;
 
 use Illuminate\Http\Request;
 use Orchestra\Testbench\TestCase;
-use Suarez\UtmParameter\UtmParameter;
+use Suarez\UtmParameter\Facades\UtmParameter;
 use Illuminate\Support\Facades\Config;
 
 class UtmParameterTest extends TestCase
@@ -27,9 +27,7 @@ class UtmParameterTest extends TestCase
 
         $request = Request::create('/test', 'GET', $parameters);
 
-        app()->singleton(UtmParameter::class, fn () => new UtmParameter());
-        app(UtmParameter::class)->boot($request);
-        session([$this->sessionKey => $parameters]);
+        UtmParameter::boot($request);
     }
 
     public function tearDown() : void
@@ -273,7 +271,7 @@ class UtmParameterTest extends TestCase
         ];
 
         $request = Request::create('/', 'GET', $parameters);
-        app(UtmParameter::class)->boot($request);
+        UtmParameter::boot($request);
 
         $source = UtmParameter::get('source');
         $this->assertEquals('newsletter', $source);
@@ -298,7 +296,7 @@ class UtmParameterTest extends TestCase
         ];
 
         $request = Request::create('/test', 'GET', $parameters);
-        app(UtmParameter::class)->boot($request);
+        UtmParameter::boot($request);
 
         $id = UtmParameter::get('id');
         $this->assertEmpty($id);
@@ -325,7 +323,7 @@ class UtmParameterTest extends TestCase
 
         $parameters = ['id' => '0123456789', 'sorting' => 'relevance'];
         $request = Request::create('/new-page', 'GET', $parameters);
-        app(UtmParameter::class)->boot($request);
+        UtmParameter::boot($request);
 
         $id = UtmParameter::get('id');
         $this->assertEmpty($id);
@@ -340,7 +338,7 @@ class UtmParameterTest extends TestCase
 
         $parameters = [];
         $request = Request::create('/second-page', 'GET', $parameters);
-        app(UtmParameter::class)->boot($request);
+        UtmParameter::boot($request);
 
         $id = UtmParameter::get('id');
         $this->assertEmpty($id);
@@ -367,7 +365,7 @@ class UtmParameterTest extends TestCase
         ];
 
         $request = Request::create('/test', 'GET', $parameters);
-        app(UtmParameter::class)->boot($request);
+        UtmParameter::boot($request);
 
         $source = UtmParameter::get('source');
         $this->assertEquals('newsletter', $source);
@@ -409,7 +407,7 @@ class UtmParameterTest extends TestCase
         ];
 
         $request = Request::create('/test', 'GET', $parameters);
-        app(UtmParameter::class)->boot($request);
+        UtmParameter::boot($request);
 
         $source = UtmParameter::get('source');
         $this->assertEquals('&lt;span onclick=&quot;alert(&#039;alert&#039;)&quot;&gt;google&lt;/span&gt;', $source);

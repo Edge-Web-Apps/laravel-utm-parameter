@@ -4,6 +4,7 @@ namespace Suarez\UtmParameter\Providers;
 
 use Illuminate\Support\Facades\Blade;
 use Suarez\UtmParameter\UtmParameter;
+use Illuminate\Foundation\AliasLoader;
 use Illuminate\Support\ServiceProvider;
 
 class UtmParameterServiceProvider extends ServiceProvider
@@ -43,5 +44,7 @@ class UtmParameterServiceProvider extends ServiceProvider
         Blade::if('containsNotUtm', function (string $key, string|null $value = null) {
             return contains_not_utm($key, $value);
         });
+
+        AliasLoader::getInstance()->alias('UtmParameter', \Suarez\UtmParameter\Facades\UtmParameter::class);
     }
 }

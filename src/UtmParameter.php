@@ -48,7 +48,7 @@ class UtmParameter
      */
     public function useRequestOrSession(Request $request)
     {
-        $currentRequestParameter = self::getParameter($request);
+        $currentRequestParameter = $this->getParameter($request);
         $sessionParameter = session($this->sessionKey);
 
         if (!empty($currentRequestParameter) && empty($sessionParameter)) {
@@ -70,9 +70,9 @@ class UtmParameter
      *
      * @return array
      */
-    public static function all()
+    public function all()
     {
-        return app(UtmParameter::class)->parameters ?? [];
+        return $this->parameters ?? [];
     }
 
     /**
@@ -82,10 +82,10 @@ class UtmParameter
      *
      * @return string|null
      */
-    public static function get(string $key)
+    public function get(string $key)
     {
-        $parameters = self::all();
-        $key = self::ensureUtmPrefix($key);
+        $parameters = $this->all();
+        $key = $this->ensureUtmPrefix($key);
 
         if (!array_key_exists($key, $parameters)) {
             return null;
@@ -102,17 +102,17 @@ class UtmParameter
      *
      * @return bool
      */
-    public static function has(string $key, $value = null)
+    public function has(string $key, $value = null)
     {
-        $parameters = self::all();
-        $key = self::ensureUtmPrefix($key);
+        $parameters = $this->all();
+        $key = $this->ensureUtmPrefix($key);
 
         if (!array_key_exists($key, $parameters)) {
             return false;
         }
 
         if (array_key_exists($key, $parameters) && $value !== null) {
-            return self::get($key) === $value;
+            return $this->get($key) === $value;
         }
 
         return true;
@@ -125,16 +125,16 @@ class UtmParameter
      * @param string $value
      * @return bool
      */
-    public static function contains(string $key, string $value)
+    public function contains(string $key, string $value)
     {
-        $parameters = self::all();
-        $key = self::ensureUtmPrefix($key);
+        $parameters = $this->all();
+        $key = $this->ensureUtmPrefix($key);
 
         if (!array_key_exists($key, $parameters) || !is_string($value)) {
             return false;
         }
 
-        return str_contains(self::get($key), $value);
+        return str_contains($this->get($key), $value);
     }
 
     /**
@@ -142,10 +142,10 @@ class UtmParameter
      *
      * @return bool
      */
-    public static function clear()
+    public function clear()
     {
-        session()->forget(app(UtmParameter::class)->sessionKey);
-        app(UtmParameter::class)->parameters = null;
+        session()->forget($this->sessionKey);
+        $this->parameters = null;
         return true;
     }
 
@@ -175,7 +175,7 @@ class UtmParameter
      * @param string $key
      * @return string
      */
-    protected static function ensureUtmPrefix(string $key): string
+    protected function ensureUtmPrefix(string $key): string
     {
         return str_starts_with($key, 'utm_') ? $key : 'utm_' . $key;
     }

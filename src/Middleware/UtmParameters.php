@@ -4,7 +4,7 @@ namespace Suarez\UtmParameter\Middleware;
 
 use Closure;
 use Illuminate\Http\Request;
-use Suarez\UtmParameter\UtmParameter;
+use Suarez\UtmParameter\Facades\UtmParameter;
 
 class UtmParameters
 {
@@ -19,7 +19,7 @@ class UtmParameters
     public function handle(Request $request, Closure $next)
     {
         if ($this->shouldAcceptUtmParameter($request)) {
-            app(UtmParameter::class)->boot($request);
+            UtmParameter::boot($request);
         }
 
         return $next($request);

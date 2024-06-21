@@ -1,6 +1,6 @@
 <?php
 
-use Suarez\UtmParameter\UtmParameter;
+use Suarez\UtmParameter\Facades\UtmParameter;
 
 if (!function_exists('get_all_utm')) {
     function get_all_utm()

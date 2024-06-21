@@ -51,7 +51,10 @@
         "laravel": {
             "providers": [
                 "Suarez\\UtmParameter\\Providers\\UtmParameterServiceProvider"
-            ]
+            ],
+            "aliases": {
+                "UtmParameter": "Suarez\\UtmParameter\\Facades\\UtmParameter"
+            }
         }
     },
     "minimum-stability": "stable",
