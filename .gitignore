@@ -1,3 +1,9 @@
 vendor
 composer.lock
 *.cache
+.idea/encodings.xml
+.idea/laravel-utm-parameter.iml
+.idea/modules.xml
+.idea/php.xml
+.idea/phpunit.xml
+.idea/vcs.xml
