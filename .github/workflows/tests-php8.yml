@@ -10,6 +10,7 @@ on:
       - 'README.md'
       - 'CHANGELOG.md'
   release:
+    types: [published]
 
 jobs:
   tests:
@@ -17,25 +18,27 @@ jobs:
 
     strategy:
       matrix:
-        laravel: ['12.*']
-        php: [8.2, 8.3, 8.4]
+        laravel: ['12.*', '13.*']
+        php: [8.3, 8.4]
       fail-fast: false
 
     name: Laravel ${{ matrix.laravel }}, PHP ${{ matrix.php }}
 
     steps:
       - name: Check out code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
 
       - name: Set up PHP
         uses: shivammathur/setup-php@v2
         with:
           php-version: ${{ matrix.php }}
-          extension: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          extensions: dom, curl, libxml, mbstring, zip, pcntl, pdo, sqlite, pdo_sqlite, bcmath, soap, intl, gd, exif, iconv, imagick
+          coverage: none
 
       - name: Install dependencies
         run: |
-            composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
-            composer update --prefer-stable --prefer-dist --no-interaction --no-suggest
+          composer require "illuminate/support:${{ matrix.laravel }}" "illuminate/contracts:${{ matrix.laravel }}" --no-interaction --no-update
+          composer update --prefer-stable --prefer-dist --no-interaction
+
       - name: Run tests
         run: vendor/bin/phpunit
