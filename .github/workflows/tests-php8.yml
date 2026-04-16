@@ -1,4 +1,4 @@
-name: Tests (Laravel 13 / PHP 8.3+)
+name: Test PHP 8.x
 
 on:
   push:
