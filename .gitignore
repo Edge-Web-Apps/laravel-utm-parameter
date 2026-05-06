@@ -7,4 +7,3 @@ composer.lock
 .idea/php.xml
 .idea/phpunit.xml
 .idea/vcs.xml
-.idea/deployment.xml
