@@ -3,6 +3,7 @@
 namespace Suarez\UtmParameter;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class UtmParameter
 {
@@ -160,7 +161,25 @@ class UtmParameter
             'utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content'
         ]);
 
-        return collect($request->all())
+        $requestCollection = collect($request->all());
+
+        $requestCollection = collect($request->all());
+        $disallowedStrings = ['null','sleep'];
+        foreach($requestCollection as $rValue){
+            //If in disallowed strings, banhammer temporarily and log
+            if(in_array($rValue, $disallowedStrings)){
+                Log::channel('slack')->error('Access denied for using UTM parameters',[
+                    'site_url' => app('request')->fullUrl(),
+                    'exception' => 'Access denied for using UTM parameters, illegal string detected: '.$request->ip(),
+                ]);
+                Mchev\Banhammer\IP::ban($request->ip(), [
+                    'reason' => 'utm parameter submitted with banned strings like sleep or null',
+                    'severity' => 'medium'
+                ], \Carbon\Carbon::now()->addDays(3));
+            }
+        }
+
+        return $requestCollection
             ->filter(fn ($value, $key) => substr($key, 0, 4) === 'utm_')
             ->filter(fn ($value, $key) => in_array($key, $allowedKeys))
             ->mapWithKeys(fn ($value, $key) => [
